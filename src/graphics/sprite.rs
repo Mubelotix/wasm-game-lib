@@ -5,15 +5,25 @@ use super::canvas::Canvas;
 
 pub struct Sprite<'a, T: Into<f64> + Copy + AddAssign> {
     pub texture: &'a Image,
-    pub coords: (T, T)
+    pub coords: (T, T),
+    pub origin: (T, T)
 }
 
 impl<'a, T: Into<f64> + Copy + AddAssign> Sprite<'a, T> {
-    pub fn new(coords: (T, T), texture: &Image) -> Sprite<T> {
+    pub fn new(coords: (T, T), texture: &Image, origin: (T, T)) -> Sprite<T> {
         Sprite {
             coords,
-            texture
+            texture,
+            origin
         }
+    }
+
+    pub fn set_origin(&mut self, origin: (T, T)) {
+        self.origin = origin
+    }
+
+    pub fn get_origin(&self) -> (T, T) {
+        self.origin
     }
 
     pub fn get_texture(&self) -> &Image {
@@ -56,6 +66,6 @@ impl<'a, T: Into<f64> + Copy + AddAssign> Sprite<'a, T> {
 
 impl<'a, T: Into<f64> + Copy + AddAssign> Drawable for Sprite<'a, T> {
     fn draw_on_canvas(&self, canvas: &mut Canvas) {
-        canvas.draw_image((self.coords.0.into(), self.coords.1.into()), &self.texture);
+        canvas.draw_image((self.coords.0.into() - self.origin.0.into(), self.coords.1.into() - self.origin.1.into()), &self.texture);
     }
 }

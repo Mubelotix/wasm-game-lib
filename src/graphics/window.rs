@@ -41,7 +41,6 @@ impl Window {
         let (mut window, canvas) = Window::init();
         if mouse_events {
             window.events.start_recording_mouse_events();
-        } else {
         }
         if key_events {
             window.events.start_recording_keyboard_events();
