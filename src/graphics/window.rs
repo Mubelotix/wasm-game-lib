@@ -45,6 +45,15 @@ impl Window {
         if key_events {
             window.events.start_recording_keyboard_events();
         }
+        if size_events {
+            window.events.start_recording_size_events();
+        }
+        if focus_events {
+            window.events.start_recording_focus_events();
+        }
+        if joystick_events {
+            unimplemented!("joysticks are not implemented for now");
+        }
         
         (window, canvas)
     }

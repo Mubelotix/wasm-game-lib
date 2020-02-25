@@ -1,7 +1,7 @@
 pub mod types {
     pub const MOUSE_EVENT: u8 =     0b00000001;
     pub const KEYBOARD_EVENT: u8 =  0b00000010;
-    pub const SIZE_EVENT: u8 =      0b00000100;
+    pub const RESIZE_EVENT: u8 =    0b00000100;
     pub const FOCUS_EVENT: u8 =     0b00001000;
     pub const JOYSTICK_EVENT: u8 =  0b00010000;
 }
@@ -14,7 +14,7 @@ use super::joystick::*;
 pub enum Event {
     MouseEvent(MouseEvent),
     KeyboardEvent(KeyboardEvent),
-    SizeEvent(usize, usize),
+    ResizeEvent(u32, u32),
     FocusEvent(bool),
     JoystickEvent(JoystickEvent)
 }
@@ -137,6 +137,40 @@ impl EventManager {
         }) as Box<dyn FnMut(web_sys::KeyboardEvent)>);
         self.window
             .add_event_listener_with_callback("keydown", event.as_ref().unchecked_ref())
+            .unwrap();
+        event.forget();
+    }
+
+    pub fn start_recording_focus_events(&mut self) {
+        let events2 = Rc::clone(&self.events);
+        let event = Closure::wrap(Box::new(move || {
+            events2.borrow_mut().push_back(Event::FocusEvent(true))
+        }) as Box<dyn FnMut()>);
+        self.window
+            .add_event_listener_with_callback("focus", event.as_ref().unchecked_ref())
+            .unwrap();
+        event.forget();
+
+        let events2 = Rc::clone(&self.events);
+        let event = Closure::wrap(Box::new(move || {
+            events2.borrow_mut().push_back(Event::FocusEvent(false));
+            
+        }) as Box<dyn FnMut()>);
+        self.window
+            .add_event_listener_with_callback("blur", event.as_ref().unchecked_ref())
+            .unwrap();
+        event.forget();
+    }
+
+    pub fn start_recording_size_events(&mut self) {
+        let events2 = Rc::clone(&self.events);
+        let event = Closure::wrap(Box::new(move || {
+            let width = window().unwrap().document().unwrap().document_element().unwrap().client_width() as u32;
+            let height = window().unwrap().document().unwrap().document_element().unwrap().client_height() as u32;
+            events2.borrow_mut().push_back(Event::ResizeEvent(width, height));
+        }) as Box<dyn FnMut()>);
+        self.window
+            .add_event_listener_with_callback("resize", event.as_ref().unchecked_ref())
             .unwrap();
         event.forget();
     }
