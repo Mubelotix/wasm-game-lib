@@ -2,7 +2,6 @@ use web_sys::HtmlImageElement;
 use wasm_bindgen::JsCast;
 use js_sys::Promise;
 use wasm_bindgen_futures::JsFuture;
-use crate::system::log;
 
 #[derive(Debug)]
 pub struct Image {
@@ -35,5 +34,17 @@ impl Image {
 
     pub(crate) fn get_html_element(&self) -> &HtmlImageElement {
         &self.element
+    }
+
+    pub fn get_width<T: From<u32>>(&self) -> T {
+        self.element.width().into()
+    }
+
+    pub fn get_height<T: From<u32>>(&self) -> T {
+        self.element.height().into()
+    }
+
+    pub fn get_size<T: From<u32>>(&self) -> (T, T) {
+        (self.element.width().into(), self.element.height().into())
     }
 }

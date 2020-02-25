@@ -4,28 +4,17 @@ use wasm_bindgen::JsCast;
 
 pub struct Canvas {
     context: web_sys::CanvasRenderingContext2d,
-    element: web_sys::HtmlCanvasElement
+    pub(crate) element: web_sys::HtmlCanvasElement
 }
 
 impl Canvas {
-    pub fn new(visible: bool) -> Canvas {
+    pub fn new() -> Canvas {
         let document = web_sys::window().unwrap().document().unwrap();
         let element = document
             .create_element("canvas")
             .unwrap()
             .dyn_into::<web_sys::HtmlCanvasElement>()
             .unwrap();
-        
-        if visible {
-            document
-                .body()
-                .unwrap()
-                .append_child(&element)
-                .unwrap();
-            
-            element.set_width(document.document_element().unwrap().client_width() as u32);
-            element.set_height(document.document_element().unwrap().client_height() as u32);
-        }
 
         let context = element
             .get_context("2d")
@@ -40,8 +29,19 @@ impl Canvas {
         }
     }
 
+    pub fn clear_rect(&mut self, (x, y): (f64, f64), (w, h): (f64, f64)) {
+        self.context .clear_rect(x, y, w, h);
+    }
+
+    /// Clear the canvas
     pub fn clear(&mut self) {
-        unimplemented!()
+        self.clear_rect(
+            (0.0, 0.0),
+            (
+                f64::from(self.element.width()),
+                f64::from(self.element.height()),
+            ),
+        )
     }
 
     pub fn draw(&mut self, object: &impl Drawable) {

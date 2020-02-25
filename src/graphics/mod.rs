@@ -1,4 +1,4 @@
-pub mod tab;
+pub mod window;
 pub mod canvas;
 pub mod image;
 pub mod font;

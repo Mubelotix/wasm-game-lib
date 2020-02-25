@@ -1,13 +1,14 @@
+use core::ops::AddAssign;
 use super::drawable::Drawable;
 use super::image::Image;
 use super::canvas::Canvas;
 
-pub struct Sprite<'a, T: Into<f64> + Copy> {
+pub struct Sprite<'a, T: Into<f64> + Copy + AddAssign> {
     pub texture: &'a Image,
     pub coords: (T, T)
 }
 
-impl<'a, T: Into<f64> + Copy> Sprite<'a, T> {
+impl<'a, T: Into<f64> + Copy + AddAssign> Sprite<'a, T> {
     pub fn new(coords: (T, T), texture: &Image) -> Sprite<T> {
         Sprite {
             coords,
@@ -46,9 +47,14 @@ impl<'a, T: Into<f64> + Copy> Sprite<'a, T> {
     pub fn get_coords(&mut self) -> (T, T) {
         self.coords
     }
+
+    pub fn move_by(&mut self, movement: (T, T)) {
+        self.coords.0 += movement.0;
+        self.coords.1 += movement.1;
+    }
 }
 
-impl<'a, T: Into<f64> + Copy> Drawable for Sprite<'a, T> {
+impl<'a, T: Into<f64> + Copy + AddAssign> Drawable for Sprite<'a, T> {
     fn draw_on_canvas(&self, canvas: &mut Canvas) {
         canvas.draw_image((self.coords.0.into(), self.coords.1.into()), &self.texture);
     }
