@@ -1,4 +1,4 @@
-/// All the keys
+#[derive(Debug)]
 pub enum Key {
     Unknow = 0,
     BackSpace = 8,
@@ -207,8 +207,8 @@ impl From<u32> for Key {
     }
 }
 
+#[derive(Debug)]
 pub enum KeyboardEvent {
     Down(Key),
-    Up(Key),
-    Press(Key),
+    Up(Key)
 }

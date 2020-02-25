@@ -1,3 +1,4 @@
+#[derive(Debug)]
 pub enum MouseEvent {
     Click(u32, u32),
     RightClick(u32, u32),
