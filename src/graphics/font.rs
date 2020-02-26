@@ -18,7 +18,7 @@ use wasm_bindgen::JsValue;
 /// 
 /// // use the fonts with the Text struct
 /// let arial_text = Text::new_with_text_and_coords(&arial, "This text is using Arial font.", (0,100));
-/// let trade_winds_text = Text::new_with_text_and_coords(&sherif, "This text is using Trade Winds font.", (0,200));
+/// let trade_winds_text = Text::new_with_text_and_coords(&trade_winds, "This text is using Trade Winds font.", (0,200));
 /// # }
 /// ```
 pub struct Font {
@@ -40,7 +40,7 @@ impl Font {
     /// let trade_winds = Font::load("https://fonts.gstatic.com/s/tradewinds/v8/AYCPpXPpYNIIT7h8-QenM0Jt5vM.woff2").await.unwrap();
     /// 
     /// // use the font with the Text struct
-    /// let trade_winds_text = Text::new_with_text_and_coords(&sherif, "This text is using Trade Winds font.", (0,100));
+    /// let trade_winds_text = Text::new_with_text_and_coords(&trade_winds, "This text is using Trade Winds font.", (0,100));
     /// # }
     /// ```
     /// 

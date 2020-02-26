@@ -10,8 +10,10 @@ use super::canvas::Canvas;
 /// ```rust
 /// use wasm_game_lib::graphics::image::Image;
 /// use wasm_game_lib::graphics::sprite::Sprite;
+/// # use wasm_game_lib::graphics::window::Window;
 /// # async fn test() {
 /// # let (window, mut canvas) = Window::init(); 
+/// 
 /// // load a texture from the web
 /// let ferris_texture = Image::load("https://rustacean.net/assets/cuddlyferris.svg").await.unwrap();
 /// 
@@ -19,7 +21,7 @@ use super::canvas::Canvas;
 /// let ferris = Sprite::<u32>::new((0,0), &ferris_texture, (0,0));
 /// 
 /// // draw the sprite on a canvas
-/// canvas.draw(&sprite);
+/// canvas.draw(&ferris);
 /// # }
 pub struct Sprite<'a, T: Into<f64> + Copy + AddAssign> {
     /// The texture of the Sprite

@@ -83,7 +83,7 @@ impl Window {
     /// use wasm_game_lib::graphics::window::Window;
     /// 
     /// // create a window recording three types of event
-    /// let (window, canvas) = Window::init_with_events(MOUSE_EVENT + KEYBOARD_EVENT + FOCUS_EVENT);
+    /// let (mut window, canvas) = Window::init_with_events(MOUSE_EVENT + KEYBOARD_EVENT + FOCUS_EVENT);
     /// 
     /// loop {
     ///     for event in window.poll_events() {

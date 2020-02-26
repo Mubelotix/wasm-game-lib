@@ -10,8 +10,5 @@ use std::time::Duration;
 
 #[wasm_bindgen_test]
 fn pass() {
-    Canvas::new(true);
-    let test = Sprite {
-
-    };
+    
 }

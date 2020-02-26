@@ -1,4 +1,6 @@
+/// An enum representing all the keys of a keyboard (normally)
 #[derive(Debug)]
+#[allow(missing_docs)]
 pub enum Key {
     Unknow = 0,
     BackSpace = 8,
@@ -208,7 +210,10 @@ impl From<u32> for Key {
 }
 
 #[derive(Debug)]
+/// A keyboard event
 pub enum KeyboardEvent {
+    /// A key has been pressed
     Down(Key),
+    /// A key has been released
     Up(Key)
 }

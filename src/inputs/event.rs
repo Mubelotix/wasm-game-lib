@@ -1,7 +1,13 @@
+/// This module contains every event type.
+/// It is intended to be used in the [init_with_events method](../../graphics/window/struct.Window.html#methods.init_with_events).
 pub mod types {
+    /// Events related to the mouse
     pub const MOUSE_EVENT: u8 =     0b00000001;
+    /// Events related to the keyboard
     pub const KEYBOARD_EVENT: u8 =  0b00000010;
+    /// Event fired when the size of the window change
     pub const RESIZE_EVENT: u8 =    0b00000100;
+    /// Events fired when the window lost or gain focus
     pub const FOCUS_EVENT: u8 =     0b00001000;
     /// Joysticks are not supported for now
     pub const JOYSTICK_EVENT: u8 =  0b00010000;
@@ -11,12 +17,19 @@ use super::mouse::*;
 use super::keyboard::*;
 use super::joystick::*;
 
+/// An enum containing more specific enums.
 #[derive(Debug)]
 pub enum Event {
+    /// Event is a mouse event
     MouseEvent(MouseEvent),
+    /// Event is a keyboard event
     KeyboardEvent(KeyboardEvent),
+    /// The size of the window changed, contains the new size
     ResizeEvent(u32, u32),
+    /// The window got or lost focus.
+    /// The bool is set to true if the tab has the focus after the modification.
     FocusEvent(bool),
+    /// Joysticks are unsupported
     JoystickEvent(JoystickEvent)
 }
 
@@ -28,12 +41,16 @@ use wasm_bindgen::{prelude::*, JsCast};
 use web_sys::{window, Window as WebSysWindow};
 use crate::system::log;
 
+/// The struct which tracks events.
+/// You can get this struct with the [poll_event() method](../../graphics/window/struct.Window.html#methods.poll_event), or by creating it [manually](#methods.new).
 pub struct EventManager {
     window: WebSysWindow,
     events: Rc<RefCell<VecDeque<Event>>>
 }
 
 impl EventManager {
+    /// Create an event manager.
+    /// It will not record events if you don't call the appropriate methods.
     pub fn new() -> Self {
         EventManager {
             window: window().unwrap(),
@@ -41,6 +58,8 @@ impl EventManager {
         }
     }
 
+    /// The event manager will start recording mouse events.
+    /// This can't be stopped!
     pub fn start_recording_mouse_events(&mut self) {
         use crate::inputs::mouse::*;
 
@@ -119,6 +138,8 @@ impl EventManager {
         event.forget();
     }
 
+    /// The event manager will start recording keyboard events.
+    /// This can't be stopped!
     pub fn start_recording_keyboard_events(&mut self) {
         use crate::inputs::keyboard::*;
 
@@ -142,6 +163,8 @@ impl EventManager {
         event.forget();
     }
 
+    /// The event manager will start recording focus events.
+    /// This can't be stopped!
     pub fn start_recording_focus_events(&mut self) {
         let events2 = Rc::clone(&self.events);
         let event = Closure::wrap(Box::new(move || {
@@ -163,6 +186,8 @@ impl EventManager {
         event.forget();
     }
 
+    /// The event manager will start recording size events.
+    /// This can't be stopped!
     pub fn start_recording_size_events(&mut self) {
         let events2 = Rc::clone(&self.events);
         let event = Closure::wrap(Box::new(move || {
