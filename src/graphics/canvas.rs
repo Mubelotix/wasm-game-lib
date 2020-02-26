@@ -3,7 +3,7 @@ use super::image::Image;
 use wasm_bindgen::JsCast;
 
 pub struct Canvas {
-    context: web_sys::CanvasRenderingContext2d,
+    pub(crate) context: web_sys::CanvasRenderingContext2d,
     pub(crate) element: web_sys::HtmlCanvasElement
 }
 
@@ -70,5 +70,13 @@ impl Canvas {
                 y,
             )
             .unwrap();
+    }
+
+    pub fn fill_text(&mut self, (x, y): (usize, usize), text: &str, max_width: Option<usize>) {
+        if let Some(max_width) = max_width {
+            self.context.fill_text_with_max_width(text, x as f64, y as f64, max_width as f64).unwrap();
+        } else {
+            self.context.fill_text(text, x as f64, y as f64).unwrap();
+        }
     }
 }
