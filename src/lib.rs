@@ -20,7 +20,7 @@
 //! wasm-pack build --target=web
 //! ```
 //! 
-//! I suggest you to put this on lib.rs.
+//! I suggest you put this on lib.rs and add the crate wasm-bindgen-futures.
 //! 
 //! ```rust
 //! #[allow(unused_imports)]
