@@ -3,6 +3,7 @@ pub mod types {
     pub const KEYBOARD_EVENT: u8 =  0b00000010;
     pub const RESIZE_EVENT: u8 =    0b00000100;
     pub const FOCUS_EVENT: u8 =     0b00001000;
+    /// Joysticks are not supported for now
     pub const JOYSTICK_EVENT: u8 =  0b00010000;
 }
 

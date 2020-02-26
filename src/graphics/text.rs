@@ -5,10 +5,14 @@ use crate::graphics::canvas::Canvas;
 const EMPTY_STR: &str = "";
 const PX_STR: &str = "px";
 
+/// A struct representing the style of a [Text](struct.Text.html).
 pub struct TextStyle {
-    italic: bool,
-    bold: bool,
-    underlined: bool,
+    /// Italic
+    pub italic: bool,
+    /// Bold
+    pub bold: bool,
+    /// Underlined is not supported for now!
+    pub underlined: bool,
 }
 
 impl Default for TextStyle {
@@ -21,15 +25,22 @@ impl Default for TextStyle {
     }
 }
 
+/// A text drawable on a [Canvas](../canvas/struct.Canvas.html).
 pub struct Text<'a> {
+    /// The coords of the text in px.
     pub coords: (usize, usize),
+    /// The [font](../font/struct.Font.html) of the text.
     pub font: &'a Font,
+    /// The text.
     pub text: &'a str,
+    /// The [style](struct.TextStyle.html) of the text (bold/italic...)
     pub style: TextStyle,
+    /// The character_size. example: (14, "px")
     pub character_size: (usize, &'a str)
 }
 
 impl<'a> Text<'a> {
+    /// Create a new text with default values.
     pub fn new(font: &'a Font) -> Text<'a> {
         Text {
             coords: (0,0),
@@ -40,6 +51,7 @@ impl<'a> Text<'a> {
         }
     }
 
+    /// Create a new text with some default values.
     pub fn new_with_text_and_coords(font: &'a Font, text: &'a str, coords: (usize, usize)) -> Text<'a> {
         Text {
             coords,
@@ -50,6 +62,7 @@ impl<'a> Text<'a> {
         }
     }
 
+    /// Create a new text with no default value.
     pub fn new_with_options(font: &'a Font, text: &'a str, coords: (usize, usize), style: TextStyle, character_size: (usize, &'a str)) -> Text<'a> {
         Text {
             coords,
@@ -60,10 +73,12 @@ impl<'a> Text<'a> {
         }
     }
 
+    /// Set the displayed text.
     pub fn set_text(&mut self, text: &'a str) {
         self.text = text;
     }
 
+    /// Set the [style](struct.TextStyle.html) of the text.
     pub fn set_style(&mut self, style: TextStyle) {
         self.style = style;
     }

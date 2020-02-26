@@ -1,3 +1,5 @@
+//! This module contains everything related to graphics.
+
 pub mod window;
 pub mod canvas;
 pub mod image;
