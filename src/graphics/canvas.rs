@@ -1,4 +1,5 @@
 use super::drawable::Drawable;
+use super::color::Color;
 use super::image::Image;
 use wasm_bindgen::{JsCast, JsValue};
 
@@ -68,8 +69,8 @@ impl Canvas {
     /// - "blue",
     /// - "#241F45",
     /// - "#aaa"
-    pub fn fill_rect(&mut self, (x, y): (f64, f64), (w, h): (f64, f64), color: &str) {
-        self.context.set_fill_style(&JsValue::from_str(color));
+    pub fn fill_rect(&mut self, (x, y): (f64, f64), (w, h): (f64, f64), color: Color) {
+        self.context.set_fill_style(&JsValue::from_str(&color.to_string()));
         self.context.fill_rect(x, y, w, h);
     }
 
@@ -90,16 +91,28 @@ impl Canvas {
     }
 
     /// Clear all the canvas with a visible black.
-    pub fn clear_black(&mut self) {
+    pub fn clear_with_black(&mut self) {
         self.fill_rect(
             (0.0, 0.0),
             (
                 f64::from(self.element.width()),
                 f64::from(self.element.height()),
             ),
-            "black"
+            Color::black()
         );
-}
+    }
+
+    /// Clear all the canvas with a custom color.
+    pub fn clear_with_color(&mut self, color: Color) {
+        self.fill_rect(
+            (0.0, 0.0),
+            (
+                f64::from(self.element.width()),
+                f64::from(self.element.height()),
+            ),
+            color
+        );
+    }
 
     /// Draw an object implementing the [Drawable trait](../drawable/trait.Drawable.html) on the canvas.
     /// 
