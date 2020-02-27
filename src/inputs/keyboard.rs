@@ -1,5 +1,5 @@
 /// An enum representing all the keys of a keyboard (normally)
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 #[allow(missing_docs)]
 pub enum Key {
     Unknow = 0,

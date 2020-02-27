@@ -1,3 +1,4 @@
+use futures::channel::oneshot::Sender;
 use wasm_bindgen::JsValue;
 
 /// This struct represent a font.
@@ -17,10 +18,11 @@ use wasm_bindgen::JsValue;
 /// let trade_winds = Font::load("https://fonts.gstatic.com/s/tradewinds/v8/AYCPpXPpYNIIT7h8-QenM0Jt5vM.woff2").await.unwrap();
 /// 
 /// // use the fonts with the Text struct
-/// let arial_text = Text::new_with_text_and_coords(&arial, "This text is using Arial font.", (0,100));
-/// let trade_winds_text = Text::new_with_text_and_coords(&trade_winds, "This text is using Trade Winds font.", (0,200));
+/// let arial_text = Text::new_with_text_and_coords(&arial, String::from("This text is using Arial font."), (0,100));
+/// let trade_winds_text = Text::new_with_text_and_coords(&trade_winds, String::from("This text is using Trade Winds font."), (0,200));
 /// # }
 /// ```
+#[derive(Debug)]
 pub struct Font {
     pub(crate) name: String
 }
@@ -40,7 +42,7 @@ impl Font {
     /// let trade_winds = Font::load("https://fonts.gstatic.com/s/tradewinds/v8/AYCPpXPpYNIIT7h8-QenM0Jt5vM.woff2").await.unwrap();
     /// 
     /// // use the font with the Text struct
-    /// let trade_winds_text = Text::new_with_text_and_coords(&trade_winds, "This text is using Trade Winds font.", (0,100));
+    /// let trade_winds_text = Text::new_with_text_and_coords(&trade_winds, String::from("This text is using Trade Winds font."), (0,100));
     /// # }
     /// ```
     /// 
@@ -110,6 +112,14 @@ impl Font {
         Ok(Font {
             name: family_name
         })
+    }
+
+    /// Load a custom font from an url  and send it trought a [oneshot channel](https://docs.rs/futures/0.3.4/futures/channel/oneshot/fn.channel.html).
+    /// 
+    /// It works exactly like [images](../image/struct.Image.html#method.load_and_send) so see that for an example.
+    pub async fn load_and_send(url: &str, sender: Sender<Result<Font, JsValue>>) {
+        let font = Font::load(url).await;
+        sender.send(font).expect("can't send the loaded font trought the oneshot shannel");
     }
 
     /// Return the Sherif font.

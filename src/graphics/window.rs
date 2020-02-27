@@ -39,7 +39,7 @@ impl Window {
     /// 
     /// # Example
     /// 
-    /// ```rust
+    /// ```no_run
     /// use wasm_game_lib::inputs::event::types::*; // there are only a few events so the wildcard is not a problem
     /// use wasm_game_lib::graphics::window::Window;
     /// 
@@ -78,7 +78,7 @@ impl Window {
     /// 
     /// # Example
     /// 
-    /// ```rust
+    /// ```no_run
     /// use wasm_game_lib::inputs::event::types::*;
     /// use wasm_game_lib::graphics::window::Window;
     /// 
@@ -115,6 +115,16 @@ impl Window {
     /// UNIMPLEMENTED
     pub fn get_icon(&self) -> Image {
         unimplemented!()
+    }
+
+    /// Return the width of the tab in pixels
+    pub fn get_width(&self) -> u32 {
+        self.document.document_element().unwrap().client_width() as u32
+    }
+
+    /// Return the height of the tab in pixels
+    pub fn get_height(&self) -> u32 {
+        self.document.document_element().unwrap().client_height() as u32
     }
 }
 

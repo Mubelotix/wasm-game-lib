@@ -1,6 +1,6 @@
 use super::drawable::Drawable;
 use super::image::Image;
-use wasm_bindgen::JsCast;
+use wasm_bindgen::{JsCast, JsValue};
 
 /// A Canvas is an object on which you can draw.
 /// Only the main Canvas is displayed (returned by Window::init()).
@@ -62,12 +62,23 @@ impl Canvas {
         }
     }
 
+    /// Fill a part of the canvas with a color.
+    /// 
+    /// Example valid values for the color parameter: 
+    /// - "blue",
+    /// - "#241F45",
+    /// - "#aaa"
+    pub fn fill_rect(&mut self, (x, y): (f64, f64), (w, h): (f64, f64), color: &str) {
+        self.context.set_fill_style(&JsValue::from_str(color));
+        self.context.fill_rect(x, y, w, h);
+    }
+
     /// Clear a part of the canvas.
     pub fn clear_rect(&mut self, (x, y): (f64, f64), (w, h): (f64, f64)) {
         self.context.clear_rect(x, y, w, h);
     }
 
-    /// Clear all the canvas.
+    /// Clear all the canvas with a transparent black (white).
     pub fn clear(&mut self) {
         self.clear_rect(
             (0.0, 0.0),
@@ -77,6 +88,18 @@ impl Canvas {
             ),
         )
     }
+
+    /// Clear all the canvas with a visible black.
+    pub fn clear_black(&mut self) {
+        self.fill_rect(
+            (0.0, 0.0),
+            (
+                f64::from(self.element.width()),
+                f64::from(self.element.height()),
+            ),
+            "black"
+        );
+}
 
     /// Draw an object implementing the [Drawable trait](../drawable/trait.Drawable.html) on the canvas.
     /// 
@@ -143,5 +166,25 @@ impl Canvas {
         } else {
             self.context.fill_text(text, x as f64, y as f64).unwrap();
         }
+    }
+    
+    /// Set the canvas width in pixels
+    pub fn set_width(&mut self, width: u32) {
+        self.element.set_width(width);
+    }
+
+    /// Set the canvas height in pixels
+    pub fn set_height(&mut self, height: u32) {
+        self.element.set_height(height);
+    }
+
+    /// Return the actual canvas width in pixels
+    pub fn get_width(&self) -> u32 {
+        self.element.width()
+    }
+
+    /// Return the actual canvas height in pixels
+    pub fn get_height(&self) -> u32 {
+        self.element.height()
     }
 }

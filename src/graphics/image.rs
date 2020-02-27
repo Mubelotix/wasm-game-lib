@@ -2,6 +2,8 @@ use web_sys::HtmlImageElement;
 use wasm_bindgen::JsCast;
 use js_sys::Promise;
 use wasm_bindgen_futures::JsFuture;
+use futures::channel::oneshot::Sender;
+use wasm_bindgen::JsValue;
 
 /// This struct represent an image.
 /// It is useful when using the [Sprite struct](../sprite/struct.Sprite.html).
@@ -18,7 +20,7 @@ use wasm_bindgen_futures::JsFuture;
 /// let ferris2 = Image::load("https://rustacean.net/assets/cuddlyferris.svg").await.unwrap();
 /// # }
 /// ```
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct Image {
     element: HtmlImageElement,
 }
@@ -38,7 +40,7 @@ impl Image {
     /// let ferris2 = Image::load("https://rustacean.net/assets/cuddlyferris.svg").await.unwrap();
     /// # }
     /// ```
-    pub async fn load(url: &str) -> Result<Image, ()> {
+    pub async fn load(url: &str) -> Result<Image, JsValue> {
         let document = web_sys::window().unwrap().document().unwrap();
         let element = document
             .create_element("img")
@@ -47,18 +49,80 @@ impl Image {
             .unwrap();
         element.set_src(url);
 
-        let result = JsFuture::from(Promise::new(&mut |yes, no| {
+        JsFuture::from(Promise::new(&mut |yes, no| {
             element.add_event_listener_with_callback("load", &yes).unwrap();
             element.add_event_listener_with_callback("error", &no).unwrap();
-        })).await;
+        })).await?;
 
-        if result.is_ok() {
-            Ok(Image {
-                element
-            })
-        } else {
-            Err(())
-        }
+        Ok(Image {
+            element
+        })
+    }
+
+    /// Load an Image and send it trought a [oneshot channel](https://docs.rs/futures/0.3.4/futures/channel/oneshot/fn.channel.html).
+    /// 
+    /// # Example
+    /// 
+    /// ```rust
+    /// use wasm_game_lib::graphics::image::Image;
+    /// use wasm_game_lib::system::sleep;
+    /// use futures::channel::oneshot::Receiver;
+    /// use futures::channel::oneshot;
+    /// use futures::join;
+    /// use wasm_bindgen::JsValue;
+    /// use std::time::Duration;
+    /// 
+    /// // the function which will be executed during the load
+    /// async fn loading_tracker(mut receivers: Vec<Receiver<Result<Image, JsValue>>>) -> Vec<Result<Image, JsValue>> {
+    ///     let mut images = Vec::new();
+    ///     for _ in 0..receivers.len() {
+    ///         images.push(None);
+    ///     }
+    /// 
+    ///     loop {
+    ///         for i in 0..images.len() {
+    ///             if images[i].is_none() {
+    ///                 if let Ok(Some(result)) = receivers[i].try_recv() {
+    ///                     images[i] = Some(result);
+    ///                 }
+    ///             }
+    ///         }
+    ///         
+    ///         if !images.contains(&None) {
+    ///             // break when every image is ready
+    ///             break;
+    ///         }
+    /// 
+    ///         // you may want to display a progress bar here
+    /// 
+    ///         sleep(Duration::from_millis(20)).await;
+    ///     }
+    /// 
+    ///     let mut unwraped_images = Vec::new();
+    ///     for image in images {
+    ///         unwraped_images.push(image.unwrap());
+    ///     }
+    /// 
+    ///     return unwraped_images;
+    /// }
+    /// 
+    /// async fn start() {
+    ///     // create 2 oneshot channels
+    ///     let (sender1, receiver1) = oneshot::channel::<Result<Image, JsValue>>();
+    ///     let (sender2, receiver2) = oneshot::channel::<Result<Image, JsValue>>();
+    ///     
+    ///     // create futures
+    ///     let loading_tracker_future = loading_tracker(vec![receiver1, receiver2]);
+    ///     let image1_future = Image::load_and_send("https://images.pexels.com/photos/1086723/pexels-photo-1086723.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=7000&w=7000", sender1);
+    ///     let image2_future = Image::load_and_send("https://c.wallhere.com/photos/c1/ff/Moon_rocks_sky_8k-1430191.jpg!d", sender2);
+    ///     
+    ///     // execute the three futures simultaneously and get the images
+    ///     let images = join!(loading_tracker_future, image1_future, image2_future).0;
+    /// }
+    /// ```
+    pub async fn load_and_send(url: &str, sender: Sender<Result<Image, JsValue>>) {
+        let image = Image::load(url).await;
+        sender.send(image).expect("can't send the loaded image trought the oneshot shannel");
     }
 
     pub(crate) fn get_html_element(&self) -> &HtmlImageElement {
