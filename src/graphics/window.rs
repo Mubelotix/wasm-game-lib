@@ -74,7 +74,7 @@ impl Window {
     }
 
     /// Return an Iterator of every events fired after the last call of this method.
-    /// Make sure events are activated: [init_with_events()](#methods.init_with_events).
+    /// Make sure events are activated: [init_with_events()](#method.init_with_events).
     /// 
     /// # Example
     /// 

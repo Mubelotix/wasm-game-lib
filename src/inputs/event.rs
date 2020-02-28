@@ -1,5 +1,5 @@
 /// This module contains every event type.
-/// It is intended to be used in the [init_with_events method](../../graphics/window/struct.Window.html#methods.init_with_events).
+/// It is intended to be used in the [init_with_events method](../../../graphics/window/struct.Window.html#method.init_with_events).
 pub mod types {
     /// Events related to the mouse
     pub const MOUSE_EVENT: u8 =     0b00000001;
@@ -42,7 +42,7 @@ use web_sys::{window, Window as WebSysWindow};
 use crate::system::log;
 
 /// The struct which tracks events.
-/// You can get this struct with the [poll_event() method](../../graphics/window/struct.Window.html#methods.poll_event), or by creating it [manually](#methods.new).
+/// You can get this struct with the [poll_event() method](../../graphics/window/struct.Window.html#method.poll_event), or by creating it [manually](#method.new).
 pub struct EventManager {
     window: WebSysWindow,
     events: Rc<RefCell<VecDeque<Event>>>

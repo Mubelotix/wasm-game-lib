@@ -141,12 +141,14 @@ impl Color {
 
 impl ToString for Color {
     fn to_string(&self) -> String {
-        let mut color = String::from("rgb(");
+        let mut color = String::from("rgba(");
         color.push_str(&self.red.to_string());
         color.push_str(",");
         color.push_str(&self.green.to_string());
         color.push_str(",");
         color.push_str(&self.blue.to_string());
+        color.push_str(",");
+        color.push_str(&(self.alpha as f64 / 255.0).to_string());
         color.push_str(")");
 
         color
@@ -159,6 +161,6 @@ mod test {
     fn color_to_string() {
         use super::Color;
 
-        assert_eq!(&Color::purple().to_string(), "rgb(128,0,128)");
+        assert_eq!(&Color::purple().to_string(), "rgba(128,0,128,1)");
     }
 }
