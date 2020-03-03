@@ -117,7 +117,6 @@ impl EventManager {
             .unwrap();
         event.forget();
 
-        log("ok");
         let events2 = Rc::clone(&self.events);
         let event = Closure::wrap(Box::new(move |event: web_sys::MouseEvent| {
             events2.borrow_mut().push_back(Event::MouseEvent(MouseEvent::Move(event.client_x() as u32, event.client_y() as u32)));
@@ -129,8 +128,7 @@ impl EventManager {
 
         let events2 = Rc::clone(&self.events);
         let event = Closure::wrap(Box::new(move |event: web_sys::MouseEvent| {
-            events2.borrow_mut().push_back(Event::MouseEvent(MouseEvent::RightClick(event.client_x() as u32, event.client_y() as u32)));      
-            log("test");      
+            events2.borrow_mut().push_back(Event::MouseEvent(MouseEvent::RightClick(event.client_x() as u32, event.client_y() as u32)));          
         }) as Box<dyn FnMut(web_sys::MouseEvent)>);
         self.window
             .add_event_listener_with_callback("contextmenu", event.as_ref().unchecked_ref())
