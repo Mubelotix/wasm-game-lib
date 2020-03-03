@@ -86,10 +86,15 @@ impl<'a> Text<'a> {
     pub fn set_style(&mut self, style: TextStyle) {
         self.style = style;
     }
-}
 
-impl<'a> Drawable for Text<'a> {
-    fn draw_on_canvas(&self, canvas: &mut Canvas) {
+    /// Get the width of the text
+    /// Needs a mutable reference to a canvas
+    pub fn get_width(&self, mut canvas: &mut Canvas) -> f64 {
+        self.apply_style_on_canvas(&mut canvas);
+        canvas.context.measure_text(&self.text).unwrap().width()
+    }
+
+    fn apply_style_on_canvas(&self, canvas: &mut Canvas) {
         let mut font = String::new();
         if self.style.italic {
             font.push_str("italic ");
@@ -108,6 +113,12 @@ impl<'a> Drawable for Text<'a> {
 
         canvas.context.set_font(&font);
         canvas.context.set_fill_style(&JsValue::from_str(&self.style.color.to_string()));
+    }
+}
+
+impl<'a> Drawable for Text<'a> {
+    fn draw_on_canvas(&self, mut canvas: &mut Canvas) {
+        self.apply_style_on_canvas(&mut canvas);
         canvas.fill_text(self.coords, &self.text, None);
     }
 }
