@@ -160,6 +160,11 @@ impl Canvas {
         &mut self.context
     }
 
+    /// You can use the html element to do advanced things
+    pub fn get_canvas_element(&mut self) -> &mut web_sys::HtmlCanvasElement {
+        &mut self.element
+    }
+
     /// Fill a part of the canvas with a [Color](../color/struct.Color.html).
     pub fn fill_rect(&mut self, (x, y): (f64, f64), (w, h): (f64, f64), color: Color) {
         self.context.set_fill_style(&JsValue::from_str(&color.to_string()));
