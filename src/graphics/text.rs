@@ -30,6 +30,7 @@ impl Default for TextStyle {
 }
 
 /// A text drawable on a [Canvas](../canvas/struct.Canvas.html).
+/// Multiline (\n) works only when using a character size in px.
 pub struct Text<'a> {
     /// The coords of the text in px.
     pub coords: (usize, usize),
@@ -91,7 +92,20 @@ impl<'a> Text<'a> {
     /// Needs a mutable reference to a canvas
     pub fn get_width(&self, mut canvas: &mut Canvas) -> f64 {
         self.apply_style_on_canvas(&mut canvas);
-        canvas.context.measure_text(&self.text).unwrap().width()
+        let mut max_width = 0.0;
+        for text in self.text.split('\n') {
+            let width = canvas.context.measure_text(&text).unwrap().width();
+            if width > max_width {
+                max_width = width;
+            }
+        }
+        max_width
+    }
+
+    /// Get the width of the text.
+    /// Works only for font size specified using a value in px.
+    pub fn get_height(&self) -> usize {
+        self.text.split('\n').count() * self.character_size.0
     }
 
     fn apply_style_on_canvas(&self, canvas: &mut Canvas) {
