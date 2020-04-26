@@ -161,8 +161,8 @@ impl Canvas {
     }
 
     /// You can use the html element to do advanced things
-    pub fn get_canvas_element(&mut self) -> &mut web_sys::HtmlCanvasElement {
-        &mut self.element
+    pub fn get_canvas_element(&self) -> &web_sys::HtmlCanvasElement {
+        &self.element
     }
 
     /// Fill a part of the canvas with a [Color](../color/struct.Color.html).

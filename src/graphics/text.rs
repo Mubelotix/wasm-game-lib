@@ -119,6 +119,10 @@ impl<'a> Text<'a> {
 impl<'a> Drawable for Text<'a> {
     fn draw_on_canvas(&self, mut canvas: &mut Canvas) {
         self.apply_style_on_canvas(&mut canvas);
-        canvas.fill_text(self.coords, &self.text, None);
+        for (idx, text) in self.text.split('\n').enumerate() {
+            let mut coords = self.coords;
+            coords.1 += self.character_size.0 * idx;
+            canvas.fill_text(coords, text, None);
+        }
     }
 }

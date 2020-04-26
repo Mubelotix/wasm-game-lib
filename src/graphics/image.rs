@@ -125,7 +125,7 @@ impl Image {
         sender.send(image).expect("can't send the loaded image trought the oneshot shannel");
     }
 
-    pub(crate) fn get_html_element(&self) -> &HtmlImageElement {
+    pub fn get_html_element(&self) -> &HtmlImageElement {
         &self.element
     }
 
