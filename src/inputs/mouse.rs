@@ -84,8 +84,7 @@ pub fn start_recording_mouse_events() {
 
         *IS_RECORDING_MOUSE_EVENTS.lock().unwrap() = true;
     } else {
-        use crate::system::log;
-        log("Your program is calling start_recording_mouse_events() multiple times! That's bad!");
+        crate::elog!("Your program is calling start_recording_mouse_events() multiple times! That's bad!");
     }
 }
 

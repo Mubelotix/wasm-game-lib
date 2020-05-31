@@ -34,7 +34,7 @@ use wasm_bindgen::{JsCast, JsValue};
 /// # }
 /// ```
 pub struct Canvas {
-    pub(crate) context: web_sys::CanvasRenderingContext2d,
+    pub context: web_sys::CanvasRenderingContext2d,
     pub(crate) element: web_sys::HtmlCanvasElement
 }
 

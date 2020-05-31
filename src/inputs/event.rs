@@ -39,7 +39,7 @@ use std::collections::VecDeque;
 use std::cell::RefCell;
 use wasm_bindgen::{prelude::*, JsCast};
 use web_sys::{window, Window as WebSysWindow};
-use crate::system::log;
+
 
 /// The struct which tracks events.
 /// You can get this struct with the [poll_event() method](../../graphics/window/struct.Window.html#method.poll_event), or by creating it [manually](#method.new).

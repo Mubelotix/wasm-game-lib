@@ -106,4 +106,5 @@
 pub mod graphics;
 pub mod inputs;
 /// You will need this module for various things.
+#[macro_use]
 pub mod system;
