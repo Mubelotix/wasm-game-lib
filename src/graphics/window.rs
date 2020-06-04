@@ -7,7 +7,7 @@ use web_sys::{window, Window as WebSysWindow, Document};
 /// It provide event handling.
 pub struct Window {
     document: Document,
-    window: WebSysWindow,
+    _window: WebSysWindow,
     events: EventManager
 }
 
@@ -28,7 +28,7 @@ impl Window {
         canvas.element.set_height(document.document_element().unwrap().client_height() as u32);
 
         (Window {
-            window,
+            _window: window,
             document,
             events: EventManager::new()
         }, canvas)
@@ -46,6 +46,7 @@ impl Window {
     /// // create a window recording three types of event
     /// let (window, canvas) = Window::init_with_events(MOUSE_EVENT + KEYBOARD_EVENT + FOCUS_EVENT);
     /// ```
+    #[allow(clippy::unreadable_literal)]
     pub fn init_with_events(events: u8) -> (Window, Canvas) {
         let mouse_events    = 0b00000001 & events == 0b00000001;
         let key_events      = 0b00000010 & events == 0b00000010;
@@ -107,7 +108,7 @@ impl Window {
     
     /// Set the icon of the tab.
     /// UNIMPLEMENTED
-    pub fn set_icon(&mut self, icon: &Image) {
+    pub fn set_icon(&mut self, _icon: &Image) {
         unimplemented!()
     }
     

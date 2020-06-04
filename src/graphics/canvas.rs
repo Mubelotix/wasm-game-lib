@@ -38,6 +38,12 @@ pub struct Canvas {
     pub(crate) element: web_sys::HtmlCanvasElement
 }
 
+impl Default for Canvas {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Canvas {
     /// Create a canvas which will not be displayed.
     /// To create a displayed canvas, see [Window::init()](../window/struct.Window.html#method.init).

@@ -1,4 +1,5 @@
 //! This module contains everything related to graphics.
+#![allow(missing_docs)]
 
 pub mod window;
 pub mod canvas;

@@ -1,5 +1,6 @@
 /// This module contains every event type.
 /// It is intended to be used in the [init_with_events method](../../../graphics/window/struct.Window.html#method.init_with_events).
+#[allow(clippy::unreadable_literal)]
 pub mod types {
     /// Events related to the mouse
     pub const MOUSE_EVENT: u8 =     0b00000001;
@@ -34,7 +35,6 @@ pub enum Event {
 }
 
 use std::rc::Rc;
-use web_sys;
 use std::collections::VecDeque;
 use std::cell::RefCell;
 use wasm_bindgen::{prelude::*, JsCast};
@@ -46,6 +46,12 @@ use web_sys::{window, Window as WebSysWindow};
 pub struct EventManager {
     window: WebSysWindow,
     events: Rc<RefCell<VecDeque<Event>>>
+}
+
+impl Default for EventManager {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl EventManager {

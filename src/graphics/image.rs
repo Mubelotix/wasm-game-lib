@@ -52,7 +52,7 @@ impl Image {
         JsFuture::from(Promise::new(&mut |yes, no| {
             element.add_event_listener_with_callback("load", &yes).unwrap();
             element.add_event_listener_with_callback("error", &no).unwrap();
-        })).await;
+        })).await.unwrap();
 
         Ok(Image {
             element

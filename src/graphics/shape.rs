@@ -31,7 +31,7 @@ impl Rectangle {
         Rectangle {
             line_style: LineStyle::default(),
             top_left: point,
-            dimensions: dimensions,
+            dimensions,
             fill_color: None
         }
     }
