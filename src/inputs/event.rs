@@ -17,6 +17,7 @@ pub mod types {
 use super::mouse::*;
 use super::keyboard::*;
 use super::joystick::*;
+use crate::elog;
 
 /// An enum containing more specific enums.
 #[derive(Debug)]
@@ -39,7 +40,7 @@ use std::collections::VecDeque;
 use std::cell::RefCell;
 use wasm_bindgen::{prelude::*, JsCast};
 use web_sys::{window, Window as WebSysWindow};
-
+use std::convert::TryFrom;
 
 /// The struct which tracks events.
 /// You can get this struct with the [poll_event() method](../../graphics/window/struct.Window.html#method.poll_event), or by creating it [manually](#method.new).
@@ -71,7 +72,10 @@ impl EventManager {
 
         let events2 = Rc::clone(&self.events);
         let click = Closure::wrap(Box::new(move |event: web_sys::MouseEvent| {
-            events2.borrow_mut().push_back(Event::MouseEvent(MouseEvent::Click(event.client_x() as u32, event.client_y() as u32)))
+            match Button::try_from(event.button()) {
+                Ok(button) => events2.borrow_mut().push_back(Event::MouseEvent(MouseEvent::Click(button, event.client_x() as u32, event.client_y() as u32))),
+                Err(n) => elog!("Unknown mouse button clicked: {}", n),
+            }
         }) as Box<dyn FnMut(web_sys::MouseEvent)>);
         self.window
             .add_event_listener_with_callback("click", click.as_ref().unchecked_ref())
@@ -80,7 +84,10 @@ impl EventManager {
 
         let events2 = Rc::clone(&self.events);
         let event = Closure::wrap(Box::new(move |event: web_sys::MouseEvent| {
-            events2.borrow_mut().push_back(Event::MouseEvent(MouseEvent::DoubleClick(event.client_x() as u32, event.client_y() as u32)));            
+            match Button::try_from(event.button()) {
+                Ok(button) => events2.borrow_mut().push_back(Event::MouseEvent(MouseEvent::DoubleClick(button, event.client_x() as u32, event.client_y() as u32))),
+                Err(n) => elog!("Unknown mouse button double clicked: {}", n),
+            }
         }) as Box<dyn FnMut(web_sys::MouseEvent)>);
         self.window
             .add_event_listener_with_callback("dblclick", event.as_ref().unchecked_ref())
@@ -89,7 +96,10 @@ impl EventManager {
 
         let events2 = Rc::clone(&self.events);
         let event = Closure::wrap(Box::new(move |event: web_sys::MouseEvent| {
-            events2.borrow_mut().push_back(Event::MouseEvent(MouseEvent::Down(event.client_x() as u32, event.client_y() as u32)));            
+            match Button::try_from(event.button()) {
+                Ok(button) => events2.borrow_mut().push_back(Event::MouseEvent(MouseEvent::Down(button, event.client_x() as u32, event.client_y() as u32))),
+                Err(n) => elog!("Unknown mouse button pressed: {}", n),
+            }       
         }) as Box<dyn FnMut(web_sys::MouseEvent)>);
         self.window
             .add_event_listener_with_callback("mousedown", event.as_ref().unchecked_ref())
@@ -98,7 +108,10 @@ impl EventManager {
 
         let events2 = Rc::clone(&self.events);
         let event = Closure::wrap(Box::new(move |event: web_sys::MouseEvent| {
-            events2.borrow_mut().push_back(Event::MouseEvent(MouseEvent::Up(event.client_x() as u32, event.client_y() as u32)));            
+            match Button::try_from(event.button()) {
+                Ok(button) => events2.borrow_mut().push_back(Event::MouseEvent(MouseEvent::Up(button, event.client_x() as u32, event.client_y() as u32))),
+                Err(n) => elog!("Unknown mouse button released: {}", n),
+            }
         }) as Box<dyn FnMut(web_sys::MouseEvent)>);
         self.window
             .add_event_listener_with_callback("mouseup", event.as_ref().unchecked_ref())
@@ -129,15 +142,6 @@ impl EventManager {
         }) as Box<dyn FnMut(web_sys::MouseEvent)>);
         self.window
             .add_event_listener_with_callback("mousemove", event.as_ref().unchecked_ref())
-            .unwrap();
-        event.forget();
-
-        let events2 = Rc::clone(&self.events);
-        let event = Closure::wrap(Box::new(move |event: web_sys::MouseEvent| {
-            events2.borrow_mut().push_back(Event::MouseEvent(MouseEvent::RightClick(event.client_x() as u32, event.client_y() as u32)));          
-        }) as Box<dyn FnMut(web_sys::MouseEvent)>);
-        self.window
-            .add_event_listener_with_callback("contextmenu", event.as_ref().unchecked_ref())
             .unwrap();
         event.forget();
     }
