@@ -4,8 +4,9 @@ use crate::elog;
 /// An event related to the mouse
 #[derive(Debug)]
 pub enum MouseEvent {
-    Click(Button, u32, u32),
-    DoubleClick(Button, u32, u32),
+    /// A click with the main button
+    Click(u32, u32),
+    DoubleClick(u32, u32),
     Move(u32, u32),
     Enter(u32, u32),
     Leave(u32, u32),
@@ -38,10 +39,10 @@ impl TryFrom<i16> for Button {
     fn try_from(number: i16) -> Result<Self, i16> {
         match number {
             0 => Ok(Button::Main),
-            1 => Ok(Button::Main),
-            2 => Ok(Button::Main),
-            3 => Ok(Button::Main),
-            4 => Ok(Button::Main),
+            1 => Ok(Button::Auxiliary),
+            2 => Ok(Button::Secondary),
+            3 => Ok(Button::Fourth),
+            4 => Ok(Button::Fifth),
             n => Err(n),
         }
     }
