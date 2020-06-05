@@ -6,7 +6,7 @@
 //! # How to use
 //! 
 //! Getting started with Wasm may be painful.
-//! That's why I created a simple template you can use to quickly start wasm developement.  
+//! That's why I created a simple template you can use to quickly start wasm development.  
 //!   
 //! First, you need to install `wasm-pack` and `cargo-generate`.
 //! 
