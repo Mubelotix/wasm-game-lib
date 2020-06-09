@@ -11,12 +11,34 @@ pub enum MouseEvent {
     Enter(u32, u32),
     Leave(u32, u32),
     Up(Button, u32, u32),
-    Down(Button, u32, u32)
+    Down(Button, u32, u32),
+    /// Scroll movement x, y and z
+    Scroll(f64, f64, f64, DeltaMode),
 }
 
 use lazy_static::lazy_static;
 use std::sync::atomic::{AtomicBool, Ordering::Relaxed};
 use std::sync::Mutex;
+
+#[derive(Debug)]
+pub enum DeltaMode {
+    Pixel,
+    Line,
+    Page,
+}
+
+impl TryFrom<u32> for DeltaMode {
+    type Error = u32;
+
+    fn try_from(number: u32) -> Result<Self, u32> {
+        match number {
+            0 => Ok(DeltaMode::Pixel),
+            1 => Ok(DeltaMode::Line),
+            2 => Ok(DeltaMode::Page),
+            n => Err(n),
+        }
+    }
+}
 
 /// An enum representing a mouse button
 #[derive(Debug)]

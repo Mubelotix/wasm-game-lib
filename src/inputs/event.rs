@@ -138,6 +138,18 @@ impl EventManager {
             .add_event_listener_with_callback("mousemove", event.as_ref().unchecked_ref())
             .unwrap();
         event.forget();
+
+        let events2 = Rc::clone(&self.events);
+        let event = Closure::wrap(Box::new(move |event: web_sys::WheelEvent| {
+            match DeltaMode::try_from(event.delta_mode()) {
+                Ok(mode) => events2.borrow_mut().push_back(Event::MouseEvent(MouseEvent::Scroll(event.delta_x(), event.delta_y(), event.delta_z(), mode))),
+                Err(n) => elog!("Unknown mouse movement: {}", n),
+            }
+        }) as Box<dyn FnMut(web_sys::WheelEvent)>);
+        self.window
+            .add_event_listener_with_callback("wheel", event.as_ref().unchecked_ref())
+            .unwrap();
+        event.forget();
     }
 
     /// The event manager will start recording keyboard events.
