@@ -7,7 +7,7 @@ use web_sys::{window, Window as WebSysWindow, Document};
 /// It provide event handling.
 pub struct Window {
     document: Document,
-    _window: WebSysWindow,
+    pub window: WebSysWindow,
     events: EventManager
 }
 
@@ -28,7 +28,7 @@ impl Window {
         canvas.element.set_height(document.document_element().unwrap().client_height() as u32);
 
         (Window {
-            _window: window,
+            window,
             document,
             events: EventManager::new()
         }, canvas)
