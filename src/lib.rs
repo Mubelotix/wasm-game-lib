@@ -1,4 +1,9 @@
 //! Welcome!  
+//!
+//! # This project is discontinued.
+//! 
+//! Please note that this was an experimental game library made while I was learning Rust.  
+//! Feel free to request the ownership of the crate on crates.io at [mubelotix@gmail.com](mailto:mubelotix@gmail.com).
 //!   
 //! The goal of this crate is to help you to make great 2d games running in web browsers.
 //! This crate is inspired by SFML.
